@@ -1,5 +1,6 @@
 package com.example.security.config;
 
+import com.example.security.model.Permission;
 import com.example.security.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +24,9 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
-                .antMatchers(HttpMethod.POST, "/api/**").hasRole(Role.ADMIN.name())
-                .antMatchers(HttpMethod.DELETE, "/api/**").hasRole(Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET,"/api/**").hasAuthority(Permission.DEVELOPERS_READ.getPermission())
+                .antMatchers(HttpMethod.POST, "/api/**").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())
+                .antMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
@@ -38,17 +39,17 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 User.builder()
                         .username("alisa")
                         .password(passwordEncoder().encode("alisa"))
-                        .roles(Role.ADMIN.name(), Role.USER.name())
+                        .authorities(Role.ADMIN.getAuthorities())
                         .build(),
                 User.builder()
                         .username("siri")
                         .password(passwordEncoder().encode("siri"))
-                        .roles(Role.USER.name())
+                        .authorities(Role.USER.getAuthorities())
                         .build(),
                 User.builder()
                         .username("alexa")
                         .password(passwordEncoder().encode("alexa"))
-                        .roles(Role.ADMIN.name())
+                        .authorities(Role.ADMIN.getAuthorities())
                         .build()
         );
     }
