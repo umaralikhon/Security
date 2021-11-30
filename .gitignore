@@ -34,3 +34,4 @@ build/
 .mwn/
 mvnw
 mvnw.cmd
+/.mvn/
